@@ -2,8 +2,10 @@
 
 import {useParams,useRouter} from 'next/navigation'
 import {useEffect,useState} from 'react'
+import Link from 'next/link'
 
 const SummaryPage=()=>{
+  
   const {id}=useParams()
   const router=useRouter()
   const [summaryData,setSummaryData]=useState(null)
@@ -90,12 +92,12 @@ const SummaryPage=()=>{
             >
               Delete Summary
             </button>
-            <a
+            <Link
               href="/"
               className="bg-gray-700 border hover:bg-gray-900 hover:bg-blue-700 text-white px-4 py-2 rounded"
             >
               ← Back to Summarizer
-            </a>
+            </Link>
           </div>
         </div>
 

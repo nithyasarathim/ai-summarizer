@@ -7,10 +7,12 @@ const Header=()=>{
   const {data:session}=useSession();
 
   return(
-    <div className='w-full px-30 py-5 border-b border-white justify-between flex items-center'>
-      <p className='text-white text-2xl font-bold'>
-        Reading Summary Writer
-      </p>
+    <div className='w-full px-30 py-5 border-b border-white justify-between flex flex-row items-center'>
+      <div className='flex gap-3'>
+        <p className='text-white text-2xl font-bold flex items-center'>
+          QuickRead
+        </p>
+      </div>
 
       {session?(
         <div className="flex items-center gap-4">

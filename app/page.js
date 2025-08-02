@@ -9,6 +9,8 @@ const Page=()=>{
   const router=useRouter();
   const {data:session}=useSession();
   const [input,setInput]=useState("");
+  const [isTitle,setIsTitle]=useState(false);
+  const [isPoint,setIsPoint]=useState(false);
   const [history,setHistory]=useState([]);
   const [loading,setLoading]=useState(false);
   const [wordCount,setWordCount]=useState(50);
@@ -36,7 +38,7 @@ const Page=()=>{
     setLoading(true);
 
     try{
-      const summary=await getSummaryFromGemini(input,wordCount);
+      const summary=await getSummaryFromGemini(input,wordCount,isTitle,isPoint);
       setCurrentSummary(summary);
     }catch(err){
       console.error("Gemini Error:",err);
@@ -81,6 +83,26 @@ const Page=()=>{
               >
                 {loading?"Generating...":"Generate Summary"}
               </button>
+              <div className="flex items-center gap-4">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={isTitle}
+                    onChange={(e)=>setIsTitle(e.target.checked)}
+                    className="h-4 w-4"
+                  />
+                  Include Title
+                </label>
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={isPoint}   
+                    onChange={(e)=>setIsPoint(e.target.checked)}
+                    className="h-4 w-4"
+                  />
+                  Use Bullet Points
+                </label>
+              </div>
               <label className="text-sm text-white">
                 Word Count:
                 <input
@@ -89,7 +111,7 @@ const Page=()=>{
                   max={300}
                   value={wordCount}
                   onChange={(e)=>setWordCount(Number(e.target.value))}
-                  className="ml-2 w-20 rounded text-black bg-white text-center"
+                  className="ml-2 w-20 rounded text-black bg-white text-center p-2"
                 />
               </label>
             </div>
@@ -113,7 +135,15 @@ const Page=()=>{
 
         <div className="w-1/3">
           <h2 className="text-xl font-semibold sticky top-0 p-3">History</h2>
-          <div className="space-y-4 overflow-y-auto max-h-[500px] no-scrollbar">
+          {
+            !session &&
+            <div className="space-y-4 overflow-y-auto max-h-[500px] no-scrollbar">
+              <p>Login to check saved histories !</p>
+          </div>
+          }
+          {
+            session &&
+            <div className="space-y-4 overflow-y-auto max-h-[500px] no-scrollbar">
             {history.length===0&&(
               <p className="text-gray-300">No saved summaries yet.</p>
             )}
@@ -123,17 +153,10 @@ const Page=()=>{
                 <p className="mb-2 line-clamp-2">{item.input}</p>
                 <p className="text-sm text-gray-400">Summary Preview:</p>
                 <p className="line-clamp-3">{item.summary}</p>
-                <button
-                  className="mt-2 text-blue-400 hover:text-blue-300 text-sm"
-                  onClick={()=>{
-                    alert(`Would navigate to summary/${item.id}`);
-                  }}
-                >
-                  View Full Summary
-                </button>
               </div>
             ))}
           </div>
+          }
         </div>
       </div>
     </div>
